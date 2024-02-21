@@ -79,43 +79,43 @@
 
 
 #ex7
-# def has_33(nums):
-#     cnt = 0
-#     for i in nums: 
-#         if i == 3:
-#             cnt += 1
-#         else:
-#             cnt = 0
-#     if cnt >= 2:
-#         return True
-#     else:
-#         return False
+def has_33(nums):
+    cnt = 0
+    for i in nums: 
+        if i == 3:
+            cnt += 1
+        else:
+            cnt = 0
+    if cnt >= 2:
+        return True
+    else:
+        return False
 
 
-# lst = list(map(int, input("Enter the numbers: ").split()))
-# print(has_33(lst))
+lst = list(map(int, input("Enter the numbers: ").split()))
+print(has_33(lst))
 
 
 
 #ex8
-# def spy_game(nums):
-#     cnt = 0
-#     cnt7 = 0
-#     for i in nums:
-#         if i == 0:
-#             cnt += 1
-#         if cnt >= 2:
-#             if i == 7:
-#                 cnt7 += 1
+def spy_game(nums):
+    cnt = 0
+    cnt7 = 0
+    for i in nums:
+        if i == 0:
+            cnt += 1
+        if cnt >= 2:
+            if i == 7:
+                cnt7 += 1
 
-#     if(cnt >= 2 and cnt7 >= 1):
-#         print(True)
-#     else:
-#         print(False)
+    if(cnt >= 2 and cnt7 >= 1):
+        print(True)
+    else:
+        print(False)
     
-# spy_game([1,2,4,0,0,7,5])
-# spy_game([1,0,2,4,0,5,7])
-# spy_game([1,7,2,0,4,5,0])
+spy_game([1,2,4,0,0,7,5])
+spy_game([1,0,2,4,0,5,7])
+spy_game([1,7,2,0,4,5,0])
 
 
 #ex9
@@ -166,22 +166,22 @@
 
 
 #ex13
-# import random
-# print("Hello! What is your name?")
-# name = input()
-# print(f"Well, {name}, I am thinking of a number between 1 and 20.")
-# x = random.randint(1, 20)
-# ans = False
-# cnt = 0
-# while(ans == False):
-#     cnt += 1
-#     print("Take a guess.")
-#     num = int(input())
-#     if(num < x):
-#         print("Your guess is too low.")
-#     elif(num > x):
-#         print("Your guess is too high")
-#     else:
-#         ans = True
-# print(f"Good job, {name}! You guessed my number in {cnt} guesses!")
+import random
+print("Hello! What is your name?")
+name = input()
+print(f"Well, {name}, I am thinking of a number between 1 and 20.")
+x = random.randint(1, 20)
+ans = False
+cnt = 0
+while(ans == False):
+    cnt += 1
+    print("Take a guess.")
+    num = int(input())
+    if(num < x):
+        print("Your guess is too low.")
+    elif(num > x):
+        print("Your guess is too high")
+    else:
+        ans = True
+print(f"Good job, {name}! You guessed my number in {cnt} guesses!")
 

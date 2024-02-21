@@ -94,48 +94,48 @@
 
 
 # ex5
-# class Account:
-#     def __init__(self, owner, balance):
-#         self.owner = owner
-#         self.balance = balance
-#     def deposit(self, deposit_amount):
-#         self.balance = self.balance + deposit_amount
-#         print("Amount of deposit you are going to put is", deposit_amount)
-#         print("...")
-#         print("Updated balance is", self.balance)
-#     def withdraw(self, withdrawal_amount):
-#         print("Amount of withdrawal you are going to withdraw is", withdrawal_amount)
-#         print("...")
-#         if(withdrawal_amount <= self.balance):
-#             self.balance = self.balance - withdrawal_amount
-#             print("You succesfully withdrawed required amount. Updated balance is", self.balance)
-#         elif(withdrawal_amount > self.balance):
-#             print("Insufficient funds.")
+class Account:
+    def __init__(self, owner, balance):
+        self.owner = owner
+        self.balance = balance
+    def deposit(self, deposit_amount):
+        self.balance = self.balance + deposit_amount
+        print("Amount of deposit you are going to put is", deposit_amount)
+        print("...")
+        print("Updated balance is", self.balance)
+    def withdraw(self, withdrawal_amount):
+        print("Amount of withdrawal you are going to withdraw is", withdrawal_amount)
+        print("...")
+        if(withdrawal_amount <= self.balance):
+            self.balance = self.balance - withdrawal_amount
+            print("You succesfully withdrawed required amount. Updated balance is", self.balance)
+        elif(withdrawal_amount > self.balance):
+            print("Insufficient funds.")
 
-# name = input("Write the owner's name: ")
-# balance = float(input("Write the balance: "))
-# p1 = Account(name, balance)
-# d = float(input("Amount of deposit: "))
+name = input("Write the owner's name: ")
+balance = float(input("Write the balance: "))
+p1 = Account(name, balance)
+d = float(input("Amount of deposit: "))
 
-# p1.deposit(d)
-# w = float(input("Amount of withdrawal: "))
-# p1.withdraw(w)
+p1.deposit(d)
+w = float(input("Amount of withdrawal: "))
+p1.withdraw(w)
 
         
 
 
 #ex6
-def filterprime(num):
-    cnt = 0
-    for i in range(1, num + 1):
-        if(num % i == 0):
-            cnt += 1
+# def filterprime(num):
+#     cnt = 0
+#     for i in range(1, num + 1):
+#         if(num % i == 0):
+#             cnt += 1
 
-    if cnt == 2:
-        return True
-    else:
-        return False
+#     if cnt == 2:
+#         return True
+#     else:
+#         return False
     
-nums = list(map(int, input().split()))
-filterednums = list(filter(lambda x: filterprime(x), nums))
-print("Prime numbers:", filterednums)
+# nums = list(map(int, input().split()))
+# filterednums = list(filter(lambda x: filterprime(x), nums))
+# print("Prime numbers:", filterednums)
