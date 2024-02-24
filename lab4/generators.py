@@ -20,7 +20,7 @@
 # for a in gen:
 #     evennums.append(a)
 
-# print(evennums)    
+# print(*evennums, sep = ", ")    
 
 
 #ex 3
