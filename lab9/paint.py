@@ -1,6 +1,6 @@
 import pygame, cmath
 pygame.init()
-w, y = 800, 500 #size of the screen
+w, y = 1200, 800 #size of the screen
 screen = pygame.display.set_mode((w, y)) #screen setting
 drawshape = "" #name of the shape
 
@@ -27,13 +27,13 @@ icon = pygame.image.load("images/paint.png")
 pygame.display.set_icon(icon)
 
 
-text_surface = pygame.Surface((350, 200)) #surface for our text bar
+text_surface = pygame.Surface((350, 250)) #surface for our text bar
 font = pygame.font.SysFont("Comic Sans MS", 20) #font 
 font2 = pygame.font.SysFont("Comic Sans MS", 10) #font
 
 
 #main information about game
-info = "To choose shape: SHIFT + 'r' or 'c'(r - rect, c - circle)\n To choose color: CTRL + r/b/y/o/p/w/g/a first letters of colors\n To choose eraser: SHIFT + 'e'"
+info = "To choose shape: SHIFT + r/c/s/t/q/m(r - rect, c - circle, s - square,\n t - right triangle, q - eqilateral triangle, m - rhombus)\n To choose color: CTRL + r/b/y/o/p/w/g/a first letters of colors\n To choose eraser: SHIFT + 'e'\n AND JUST CLICK ON ANY PLACE ON THE SCREEN <3"
 infotext = info.split("\n") #splitting this big text by \n
 def infoprint(surf): #function to blit every way of the big text
     y = 120
@@ -41,14 +41,6 @@ def infoprint(surf): #function to blit every way of the big text
         text = font2.render(i, True, white)
         surf.blit(text, (20, y))
         y += 20
-
-# def calculate_equilateral_triangle(center, side_length):
-#     height = side_length * cmath.sqrt(3) / 2
-#     half_side = side_length / 2
-#     vertex1 = (center[0], center[1] - height / 2)
-#     vertex2 = (center[0] - half_side, center[1] + height / 2)
-#     vertex3 = (center[0] + half_side, center[1] + height / 2)
-#     return [vertex1, vertex2, vertex3]
 
 
 painting = False #painting by default is False, since we are not painting yet
@@ -70,14 +62,14 @@ while not done:
                 drawshape = 'rectangle' #then our chosen shape is rectangle
             elif event.key == pygame.K_c and shift_held: #when key 'c' and pressing shift
                 drawshape = 'circle' #then our chosen shape is circle
-            elif event.key == pygame.K_s and shift_held:
-                drawshape = 'square'
-            elif event.key == pygame.K_t and shift_held:
-                drawshape = 'right_triangle'
-            elif event.key == pygame.K_q and shift_held:
-                drawshape = 'equilateral_triangle'
-            elif event.key == pygame.K_m and shift_held:
-                drawshape = 'rhombus'
+            elif event.key == pygame.K_s and shift_held: #when key 's' and pressing shift
+                drawshape = 'square' #then our chosen shape is square
+            elif event.key == pygame.K_t and shift_held: #when key 't' and pressing shift
+                drawshape = 'right_triangle' #then our chosen shape is right triangle
+            elif event.key == pygame.K_q and shift_held: #when key 'q' and pressing shift
+                drawshape = 'equilateral_triangle' #then our chosen shape is equilateral triangle
+            elif event.key == pygame.K_m and shift_held: #when key 'm' and pressing shift
+                drawshape = 'rhombus' #then our chosen shape is rhombus
             elif event.key == pygame.K_r and ctrl_held: #when key 'r' and pressing ctrl
                 color = red #them our chosen color is red
                 colorname = "red" 
@@ -141,21 +133,21 @@ while not done:
             pygame.draw.rect(screen, color, (pos[0], pos[1], 70, 40)) #using current color and position
         elif drawshape == "circle": #if shape is circle then we draw the circle
             pygame.draw.circle(screen, color, pos, 30) #using current color and position
-        elif drawshape == "square":
-            pygame.draw.rect(screen, color, (pos[0], pos[1], 70, 70))
-        elif drawshape == "right_triangle":
-            pygame.draw.polygon(screen, color, ((pos), (pos[0], pos[1] + 70), (pos[0] + 70, pos[1] + 70)))
+        elif drawshape == "square": # if square then we draw square when mousebutton down
+            pygame.draw.rect(screen, color, (pos[0], pos[1], 70, 70))  #using current position and equal length, since it's square
+        elif drawshape == "right_triangle": 
+            pygame.draw.polygon(screen, color, ((pos), (pos[0], pos[1] + 70), (pos[0] + 70, pos[1] + 70))) #since right triangle is triangle with 90 degree and other angles, by current pistion we will move with some pixels using function draw.polygon
 
         elif drawshape == "equilateral_triangle":
             length = 70
-            y = length * ((3 ** (1/2))/2)
-            pygame.draw.polygon(screen, color, ((pos), (pos[0] - length/2, pos[1] + y), (pos[0] + length/2, pos[1] + y)))
-            # pygame.draw.polygon(screen, color, calculate_equilateral_triangle(pos, 100))
+            y = length * ((3 ** (1/2))/2) #height of equilateral triangle
+            pygame.draw.polygon(screen, color, ((pos), (pos[0] - length/2, pos[1] + y), (pos[0] + length/2, pos[1] + y))) #moving by some pixels, using functon draw.polygon
+            
     
         elif drawshape == "rhombus":
-            a = 52
+            a = 52 #sides of rhombus are equivalent
 
             # height = a * ((2)**(1/2))
-            pygame.draw.polygon(screen, color, ((pos), (pos[0] - 20, pos[1] + 48), (pos[0], pos[1] + 48 * 2), (pos[0] + 20, pos[1] + 48)))
+            pygame.draw.polygon(screen, color, ((pos), (pos[0] - 20, pos[1] + 48), (pos[0], pos[1] + 48 * 2), (pos[0] + 20, pos[1] + 48))) #moving by some pixels, using funtion draw.polygon
 
     pygame.display.update() #updating the screen
