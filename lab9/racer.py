@@ -2,6 +2,7 @@ import pygame, random, time, sys  #libraries
 from pygame.locals import *
 pygame.init()
 
+#i changed structure of code, because found more expressed way
 
 #bool for loop
 done = False
@@ -38,8 +39,8 @@ driving = pygame.mixer.Sound('sounds/driving.mp3')
 driving.play(-1)
 #background image and image of coin
 background = pygame.image.load("images/AnimatedStreet.png")
-coinimg = pygame.image.load("images/coin.png")
-coinimg = pygame.transform.scale(coinimg, (50, 50))
+# coinimg = pygame.image.load("images/coin.png")
+# coinimg = pygame.transform.scale(coinimg, (50, 50))
 
 
 #screen setting
@@ -92,11 +93,11 @@ class Enemy(pygame.sprite.Sprite):
             self.kill()
 
 
-
+#three types of enemies as dictionary
 enemies_data = ({"path": "Enemy.png"},
                 {"path": "enemy_2.png"},
                 {"path": "enemy3.png"})
-enemies_list = [pygame.image.load("images/" + data["path"]).convert_alpha() for data in enemies_data]
+enemies_list = [pygame.image.load("images/" + data["path"]).convert_alpha() for data in enemies_data] #making them as list
 
 #class Coin where some functions
 class Coin(pygame.sprite.Sprite):
@@ -117,17 +118,16 @@ class Coin(pygame.sprite.Sprite):
             self.kill()
 
 p = Player()
-# e1 = Enemy()
-# coin = Coin()
 
 
+#types of three coins as dictionary
 coins_data = ({"path": "coin.png", "score": 100},
               {"path": "coin2.png", "score" : 50},
               {"path": "coin3.png", "score": 10})
-coins_list = [pygame.image.load("images/" + data["path"]).convert_alpha() for data in coins_data]
+coins_list = [pygame.image.load("images/" + data["path"]).convert_alpha() for data in coins_data] #as list
 
 
-
+#generaing numbers for random x 
 def generatenum():
     global w
     enemyx = random.randint(30, w - 30)
@@ -139,79 +139,79 @@ def generatenum():
 
 
 
-
+#function which makes coin
 def makeCoin(group, direction):
-    i = random.randint(0, len(coins_list) - 1)
-    x = direction
+    i = random.randint(0, len(coins_list) - 1) #random type of coin
+    x = direction #takes from parameter
 
-    speed = 4
-    return Coin(x, speed, coins_list[i], coins_data[i]["score"], group)
-
-
+    speed = 4 #initial speed
+    return Coin(x, speed, coins_list[i], coins_data[i]["score"], group) #returns class with included parameters
 
 
-speed_enemy = 4
+
+
+speed_enemy = 4 #enemys speed
+
+
+#function which makes enemy
 def makeEnemy1(group, cnt, speed):
-    l = [80, 320]
-    i = random.randint(0, len(coins_list) - 1)
+    l = [80, 320] #fro first and third line
+    i = random.randint(0, len(coins_list) - 1) #generates random
     if cnt % 2 == 0:
-        x = random.choice(l)
-    elif cnt % 2 == 1:
+        x = random.choice(l) #random choise between list l
+    elif cnt % 2 == 1: 
         x = 200
     
     
     # x = random.choice(l)
-    speed = speed + random.choice([0.5, 1])
-    return Enemy(x, speed, enemies_list[i], group)
+    speed = speed + random.choice([0.5, 1]) #speed randomly generates
+    return Enemy(x, speed, enemies_list[i], group) #return class with included parameters
 
 
-game_score = 0
-all_sprites = pygame.sprite.Group()
-all_sprites.add(p)
+game_score = 0 #initial game score
+all_sprites = pygame.sprite.Group() #makes group of sprites
+all_sprites.add(p) #adds player sprite to gruop
 
 
 
-
+#if player collides with coin
 def collideCoins():
     global game_score
     for coin in coins:
         all_sprites.add(coin)
         if p.rect.colliderect(coin.rect):
             coincollect.play()
-            game_score += coin.score
-            coin.kill()
+            game_score += coin.score #adds score to total
+            coin.kill() #collided coin disappears
 
 
+
+#if player is getting closer to enemy, enemy makes sound like "beeeep"
 def dangerrr():
     for enemy in enemies:
         all_sprites.add(enemy)
-        if abs(p.rect.centerx - enemy.rect.centerx) <= 1:
-            print(p.rect.centerx - enemy.rect.centerx)
-            beep.play()
+        if abs(p.rect.centerx - enemy.rect.centerx) <= 1: #if thier difference less than 1
+            beep.play() #play beep sound
 
 
+
+#if player collides with enemy
 def collideEnemy():
     for enemy in enemies:
         all_sprites.add(enemy)
         if p.rect.colliderect(enemy.rect):
-            crash.play()
-            losegame()
-
-
-# def collideCoinEnemy():
-#     for enemy in enemies:
-#         if enemy.rect.colliderect(coin.rect):
-#             enemy.kill()
-#             coin.kill()
+            crash.play() #play sound
+            losegame() #function losing game activates
 
 
 
+#when player collides with enemy
 def losegame():
-    time.sleep(0.5)
+    time.sleep(0.5) #waiting 0,5
 
     screen.fill(red) #background color is red, because user lost the game
-    driving.stop()
-    pygame.mixer.music.stop()
+    driving.stop() #sound of engine of car stops
+    pygame.mixer.music.stop() #bg music stops
     # #some texts
     screen.blit(game_over, (30, 250))
     screen.blit(total, (30, 400))
@@ -223,52 +223,31 @@ def losegame():
     time.sleep(3)
     pygame.quit()
     exit()
-    # screen.fill(red)
-    # for entity in all_sprites:
-    #     entity.kill()
-    
-    # time.sleep(5)
-    # exit()
 
-coins = pygame.sprite.Group()
-enemies = pygame.sprite.Group()
+coins = pygame.sprite.Group() #collecting coin sprites together
+enemies = pygame.sprite.Group() #collecting enemy sprites together
 
-list_x = []
-list_xe = []
 
-speed = 5
-gen = generatenum()
+speed = 5 #initial speed 
+gen = generatenum() #generating num for x
 
-makeCoin(coins, gen[1])
-makeEnemy1(enemies, 0, speed_enemy)
+makeCoin(coins, gen[1]) #making first coin
+makeEnemy1(enemies, 0, speed_enemy) #making first enemy
 
-# enemies = pygame.sprite.Group() #sprite group of class Enemy
-# enemies.add(e1)
-# coinscores = pygame.sprite.Group() #sprite group of class Coin
-# coinscores.add(coin)
-# all_sprites = pygame.sprite.Group() #all classes in this sprite group
-# all_sprites.add(p1)
-# all_sprites.add(e1)
-# all_sprites.add(coin)
-# player_enemy = pygame.sprite.Group() #sprite for player and enemy classes, because thier move() function doesn't have any parameter not like a coin class
-# player_enemy.add(p1)
-# player_enemy.add(e1)
 
 # USEREVENT for increasing speed of enemies by time
 inc_speed = pygame.USEREVENT + 1
 pygame.time.set_timer(inc_speed, 1000)
+
+#USEREVENT for increasing speed of enemy by time
 enemy1 = pygame.USEREVENT + 1
-pygame.time.set_timer(enemy1, 2000) #increases speed after every 1 second
-
-# enemy2 = pygame.USEREVENT + 1
-# pygame.time.set_timer(enemy2, 2000) #shrinks paddle after every 1 second
-
-# enemy3 = pygame.USEREVENT + 1
-# pygame.time.set_timer(enemy3, 1500) #shrinks paddle after every 1 second
+pygame.time.set_timer(enemy1, 800) #increases speed after every 0.8 second
 
 
 
-cnt = 0
+
+
+cnt = 0 #counting every enemy
 #loop
 while not done:
     gen = generatenum()
@@ -278,27 +257,24 @@ while not done:
             pygame.quit()
             exit()
         if event.type == inc_speed:
-            if game_score == 200:
-                speed_enemy += 1
-            # speed += 1
-        if event.type == enemy1: #increasing speed by the time
+            if game_score >= 200 and game_score <= 500: 
+                speed_enemy = random.choice([5.5, 6])
+            if game_score > 500: 
+                speed_enemy = random.choice([7.5, 8])
+        if event.type == enemy1: #making coin and enemy by time
             cnt += 1
             makeCoin(coins, gen[1])
             makeEnemy1(enemies, cnt, speed_enemy)
             
-        # if event.type == enemy2:
-        #     makeEnemy2(enemies)
-
-        # if event.type == enemy3:
-        #     makeEnemy3(enemies)
-    print(cnt)
+        
     
+    #pressed key for moving player 
     pressed = pygame.key.get_pressed()
-    if pressed[pygame.K_LEFT]:
+    if pressed[pygame.K_LEFT]: #when pressing key K_LEFT then player moves to the right
         p.rect.x -= speed
         if p.rect.x < 0:
             p.rect.x = 0
-    elif pressed[pygame.K_RIGHT]:
+    elif pressed[pygame.K_RIGHT]: #when pressing key K_RIGHT then player moves to the right
         p.rect.x += speed
         if p.rect.x > w - p.rect.width:
             p.rect.x = w - p.rect.width
@@ -306,11 +282,10 @@ while not done:
 
     
 
-    # print(makeCoin().x)
+    # activaing fucntions
     dangerrr()
     collideCoins()
     collideEnemy()
-    # collideCoinEnemy()
     #adding background image and image of coin to score pad, then amount of scores on the screen
     screen.blit(background, (0, 0))
     coins.draw(screen)
@@ -318,45 +293,16 @@ while not done:
     screen.blit(p.image, p.rect)
     
 
-    screen.blit(coinimg, (w - 50, 2))
+    # screen.blit(coinimg, (w - 50, 2))
     scores = font_small.render(str(game_score), True, black)
     screen.blit(scores, (w - 90, 15))
     
 
-    
 
-    #Moving all sprites
-    # for entity in all_sprites:
-    #     screen.blit(entity.image, entity.rect)
-    # for entity in player_enemy:
-    #     entity.move()
-    # for entity in coinscores:
-    #     entity.move(600) #there is as parameter is 600, because initially, coin should appear before touching bottom of the screen
-
-
-
-    #Collision detection with player and enemies
-    # if pygame.sprite.spritecollideany(p1, enemies):
-    #     pygame.mixer.Sound("sounds/crash.wav").play()
-    #     time.sleep(0.5)
-
-    #     screen.fill(red) #background color is red, because user lost the game
-
-    #     #some texts
-    #     screen.blit(game_over, (30, 250))
-    #     screen.blit(total, (30, 400))
-    #     screen.blit(scores, (150, 400))
-    #     pygame.display.update()
-    #     for entity in all_sprites:
-    #         entity.kill() #deletes all sprites
-        
-    #     time.sleep(2)
-    #     pygame.quit()
-    #     exit()
 
 
     #If user earns certain score to win the game
-    if game_score >= 1000: #I chose score as 20
+    if game_score >= 1000: #I chose score as 1000
         pygame.mixer.music.pause() #background music stops
         
         screen.fill(green) #screen is green, because user is winner
@@ -377,27 +323,10 @@ while not done:
         exit()
 
 
-
-    # # Collision detection with player and coin
-    # if p1.rect.colliderect(coin.rect): #when p1 and coin intersect with each other
-    #     pygame.mixer.Sound("sounds/coincollect.mp3").play() #plays sound when car touches coin
-    #     for entity in coinscores:
-    #         entity.move(474)
-    #     score += 1 #adding the score when there is collision
-        
-    # #Collision detection with enemy and coin, since they can encounter with each other or coin can appear on the enemy car, it's not beautiful 
-    # if e1.rect.colliderect(coin.rect):
-    #     for entity in coinscores:
-    #         entity.move(0) #if enemy and coin intersect, coin disappear until showing on the screen
-    
-    
-    # pos = pygame.mouse.get_pos()
-    # print(pos)   
-
         
         
     pygame.display.update() #updates the screen
     FramePerSec.tick(FPS) #frames per second
-    coins.update(h)
-    enemies.update(h)
+    coins.update(h) #sends the h to coins
+    enemies.update(h) #send the h to the coins
 
