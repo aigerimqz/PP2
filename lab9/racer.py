@@ -2,7 +2,7 @@ import pygame, random, time, sys  #libraries
 from pygame.locals import *
 pygame.init()
 
-#i changed structure of code, because found more expressed way
+#i changed structure of code, because wanted to make code shorter and organised
 
 #bool for loop
 done = False
