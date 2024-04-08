@@ -60,6 +60,8 @@ class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.image = pygame.image.load("images/Player.png") #image of player
+        # self.image = pygame.transform.scale(self.image, (48, 93))
+        # self.image = pygame.transform.rotate(self.image, 180)
         self.rect = self.image.get_rect() #rectangel of player
         self.rect.center = (160, 520)
 
@@ -143,7 +145,6 @@ def generatenum():
 def makeCoin(group, direction):
     i = random.randint(0, len(coins_list) - 1) #random type of coin
     x = direction #takes from parameter
-
     speed = 4 #initial speed
     return Coin(x, speed, coins_list[i], coins_data[i]["score"], group) #returns class with included parameters
 
@@ -176,13 +177,19 @@ all_sprites.add(p) #adds player sprite to gruop
 
 #if player collides with coin
 def collideCoins():
-    global game_score
+    global game_score, speed
     for coin in coins:
         all_sprites.add(coin)
         if p.rect.colliderect(coin.rect):
+            # if coin.score == 10:
+            #     speed -= 3
+            # elif coin.score == 100:
+            #     speed += 3
+
+            # print("current speed: ", speed )
             coincollect.play()
             game_score += coin.score #adds score to total
-            print("Current score", game_score)
+            # print("Current score", game_score)
             coin.kill() #collided coin disappears
 
 
@@ -243,6 +250,9 @@ pygame.time.set_timer(inc_speed, 1000)
 #USEREVENT for increasing speed of enemy by time
 enemy1 = pygame.USEREVENT + 1
 pygame.time.set_timer(enemy1, 800) #increases speed after every 0.8 second
+
+
+
 
 
 

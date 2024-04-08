@@ -8,65 +8,63 @@ main_bg = pygame.transform.scale(bg, (w, h))
 font1 = pygame.font.SysFont("OCR A Extended", 48)
 font2 = pygame.font.SysFont("OCR A Extended", 36)
 
-class BallButton():
-    def __init__(self, image, pos):
-        self.image = image
-        self.x_pos = pos[0]
-        self.y_pos = pos[1]
-        self.rect = self.image.get_rect(center=  (self.x_pos, self.y_pos))
-    def update(self, screen):
-        if self.image is not None:
-            screen.blit(self.image, self.rect)
+icon = pygame.image.load("images/arkanoid_icon.png")
+pygame.display.set_icon(icon)
+
+class BallButton(): #class button for choosing ball
+    def __init__(self, image, pos): #it accepts two parameters more accurately image and position of button
+        self.image = image #image of ball
+        self.x_pos = pos[0] #x coordinate
+        self.y_pos = pos[1] #y coordinate
+        self.rect = self.image.get_rect(center=  (self.x_pos, self.y_pos)) #making rectangle for ball, center
+    def update(self, screen): #after every frames updates 
+        if self.image is not None: #if it is image
+            screen.blit(self.image, self.rect) #showing evertytime that image
     
-    def check(self, position):
-        if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom):
+    def check(self, position): #checking for clicking that button
+        if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom): #checking
             return True
         return False
 
 
-class Button():
-    def __init__(self, image, pos, text_input, font, base_color, hovering_color):
-        self.image = image
-        self.x_pos = pos[0]
-        self.y_pos = pos[1]
-        self.font = font
-        self.base_color, self.hovering_color = base_color, hovering_color
-        self.text_input = text_input
-        self.text = self.font.render(self.text_input, True, self.base_color)
+class Button(): #class button for making text button
+    def __init__(self, image, pos, text_input, font, base_color, hovering_color): #this functions accepts imagw, text, position, font style, basic color and hivering color of button
+        self.image = image #background of text
+        self.x_pos = pos[0] #x coordinate
+        self.y_pos = pos[1] #y coordinate
+        self.font = font #font style
+        self.base_color, self.hovering_color = base_color, hovering_color #basic and hovering colors
+        self.text_input = text_input #inputting text
+        self.text = self.font.render(self.text_input, True, self.base_color) #making that text using font style and basic color
         if self.image is None:
-            self.image = self.text
-        self.rect = self.image.get_rect(center=  (self.x_pos, self.y_pos))
-        self.text_rect = self.text.get_rect(center = (self.x_pos, self.y_pos))
+            self.image = self.text 
+        self.rect = self.image.get_rect(center=  (self.x_pos, self.y_pos)) #then making bg rect
+        self.text_rect = self.text.get_rect(center = (self.x_pos, self.y_pos)) #text rect
        
-    def update(self, screen):
+    def update(self, screen):#updating after every frame
         if self.image is not None:
-            screen.blit(self.image, self.rect)
-        screen.blit(self.text, self.text_rect)
-    def check(self, position):
+            screen.blit(self.image, self.rect) #showing the bg image
+        screen.blit(self.text, self.text_rect) #showing the text
+    def check(self, position): #checking for position of button
         if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom):
             return True
         return False
 
-    def change(self, position):
+    def change(self, position): #changing color of text, when hovering the button
         if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom):
-            self.text = self.font.render(self.text_input, True, self.hovering_color)
+            self.text = self.font.render(self.text_input, True, self.hovering_color) #when cursor hovers the button
         else:
-            self.text = self.font.render(self.text_input, True, self.base_color)
+            self.text = self.font.render(self.text_input, True, self.base_color) #when not
 
-
-# def chooseball(a):
-#     if a == 1:
-#         return 0
-#     elif a == 2:
-#         return 1
-#     elif a == 3:
-#         return 2
-numball = 0
+numball = 0 #current number of type of ball
 
 
 
-def playing_ground():
-    global numball
+
+
+
+def playing_ground(): #function of main playing ground, where important and main functions and loop
+    global numball #globalising the value
 
 
     #paddle settings
@@ -149,8 +147,7 @@ def playing_ground():
     font = pygame.font.SysFont("OCR A Extended", 70)
 
     pygame.display.set_caption("ARKANOID") #caption of the game
-    icon = pygame.image.load("images/arkanoid_icon.png")
-    pygame.display.set_icon(icon)
+    
 
     win = font.render("WIN!", True, black) #win text
     game_over = font.render("GAME OVER", True, white) #game over text
@@ -176,13 +173,17 @@ def playing_ground():
     clock = pygame.time.Clock()
     FPS = 60
 
+
+    #all types of balls
     balls_types = ({'path': 'ball_football.png'},
                     {'path': 'ball_basket.png'},
                     {'path': 'volleyball.png'})
+    
+    #generating the list
     balls_lists = [pygame.image.load("balls/" + data["path"]).convert_alpha() for data in balls_types]
     
 
-    imgg = balls_lists[numball]
+    imgg = balls_lists[numball] #current ball image type
 
     #boolean to stop the loop
     done = False
@@ -192,7 +193,7 @@ def playing_ground():
 
     #loop
     while not done:
-        menu_mouse_pos = pygame.mouse.get_pos()
+        menu_mouse_pos = pygame.mouse.get_pos() #current position of cursor
         for event in pygame.event.get():
             if event.type == increase_speed:
                 ball_speed += 0.5  #adds 0.5 to speed
@@ -204,10 +205,12 @@ def playing_ground():
                 done = True
                 pygame.quit()
                 exit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if back_btn.check(menu_mouse_pos):
-                    main_ground()
+            if event.type == pygame.MOUSEBUTTONDOWN: #when we click on anywhere
+                if back_btn.check(menu_mouse_pos): #activates the function check for button back
+                    # main_ground()
+                    pause_ground()
 
+        
         
 
         screen.fill(black) #filling to black
@@ -222,12 +225,13 @@ def playing_ground():
         ball_image = pygame.transform.scale(imgg, (radius*2, radius*2))
         ball_image_rect = ball_image.get_rect(center = ball.center)
         
-        screen.blit(ball_image, ball_image_rect)
-
-        back_btn = Button(image = text_bg, pos = (1100, 20), text_input = "MAIN MENU", font = font2, base_color = white, hovering_color = black )
+        screen.blit(ball_image, ball_image_rect) #our ball
+        text_bg_small = pygame.transform.scale(text_bg, (100, 35))
+        #pause button on the playing ground, for pause the game
+        back_btn = Button(image = text_bg_small, pos = (1140, 25), text_input = "PAUSE", font = font2, base_color = white, hovering_color = black ) #using button class, we send to that class function, image, text, position and etc..
         # pygame.draw.circle(screen, white, ball.center, radius) #drawing our ball
-        back_btn.change(menu_mouse_pos)
-        back_btn.update(screen)
+        back_btn.change(menu_mouse_pos) #activating the function change when hovering 
+        back_btn.update(screen) #activating the function update
 
 
         #ball movement
@@ -283,11 +287,15 @@ def playing_ground():
             tapping.stop()
             screen.fill(black) #filling black, since it's tragedy((((
             screen.blit(game_over, game_overrect)
+            back_btn.change(menu_mouse_pos)
+            back_btn.update(screen)
 
         elif not len(block_list): #if you hit all of the blocks then you're WINNER!
             tapping.stop()
             screen.fill(white) #filling white, since it's happiness)))
             screen.blit(win, winrect)
+            back_btn.change(menu_mouse_pos)
+            back_btn.update(screen)
             
 
 
@@ -304,61 +312,75 @@ def playing_ground():
         pygame.display.update() #updating every time        
 
 
-def option_ground():
-    global numball
+
+#function of option side 
+def option_ground(): 
+    global numball #globalising the value
+    pygame.display.set_caption("SETTING")
+    #all ball types
     balls_types = ({'path': 'ball_football.png'},
                     {'path': 'ball_basket.png'},
                     {'path': 'volleyball.png'})
+    #making them as list
     balls_lists = [pygame.image.load("balls/" + data["path"]).convert_alpha() for data in balls_types]
     done = False
-    i = 20
     
-    text = font1.render("OPTIONS", True, white)
-    text_rect = text.get_rect(center = (w/2, h/2 - 300))
+    
+    text = font1.render("OPTIONS", True, white) #text
+    text_rect = text.get_rect(center = (w/2, h/2 - 300)) #text rect
+
+    text_2 = font2.render("CHOOSE THE BALL:", True, white) #text 2
+    text_2_rect = text_2.get_rect(center = (w/2, h/2 - 100))
     while not done:
-        menu_mouse_pos = pygame.mouse.get_pos()
+        menu_mouse_pos = pygame.mouse.get_pos() #position of cursor position
        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
                 pygame.quit()
                 exit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if image1_btn.check(menu_mouse_pos):
-                    numball = 0
-                if image2_btn.check(menu_mouse_pos):
-                    numball = 1
-                if image3_btn.check(menu_mouse_pos):
-                    numball = 2
-                if back_btn.check(menu_mouse_pos):
-                    main_ground()
+            if event.type == pygame.MOUSEBUTTONDOWN: #when we click on anywhere
+                if image1_btn.check(menu_mouse_pos): #checking for position of clicking, for example if we click on first ball
+                    numball = 0 #gives to value its number
+                if image2_btn.check(menu_mouse_pos): #if we click second ball
+                    numball = 1 #gives to value its number
+                if image3_btn.check(menu_mouse_pos): #if we click third ball
+                    numball = 2 #gives to value its number
+                if back_btn.check(menu_mouse_pos): #if we click to the back button
+                    main_ground() #arrives to main menu
         
         
-        
-        screen.blit(main_bg, (0, 0))
-        screen.blit(text, text_rect)
-        image1 = pygame.transform.scale(balls_lists[0], (100, 100))
-        image2 = pygame.transform.scale(balls_lists[1], (100, 100))
-        image3 = pygame.transform.scale(balls_lists[2], (100, 100))
-        image1_rect = image1.get_rect(center= (w/2 - 200, h/2))
-        image2_rect = image2.get_rect(center= (w/2, h/2))
-        image3_rect = image3.get_rect(center= (w/2 + 200, h/2))
-        screen.blit(image1, image1_rect)
-        screen.blit(image2, image2_rect)
-        screen.blit(image3, image3_rect)
-        image1_btn = BallButton(image = image1, pos = (w/2 - 200, h/2))
-        image2_btn = BallButton(image = image2, pos = (w/2, h/2))
-        image3_btn = BallButton(image = image3, pos = (w/2 + 200, h/2))
-        back_btn = Button(image = text_bg, pos = (100, 200), text_input = "MAIN MENU", font = font2, base_color = white, hovering_color = black )
+        text_bg_small = pygame.transform.scale(text_bg, (100, 35))
+        screen.blit(main_bg, (0, 0))#bliting the background photo
+        screen.blit(text, text_rect) #bliting the text
+        screen.blit(text_2, text_2_rect)
+        image1 = pygame.transform.scale(balls_lists[0], (100, 100)) #changing its size
+        image2 = pygame.transform.scale(balls_lists[1], (100, 100)) #changing its size
+        image3 = pygame.transform.scale(balls_lists[2], (100, 100)) #changing its size
+        image1_rect = image1.get_rect(center= (w/2 - 200, h/2)) #rect
+        image2_rect = image2.get_rect(center= (w/2, h/2)) #rect
+        image3_rect = image3.get_rect(center= (w/2 + 200, h/2)) #rect
+        screen.blit(image1, image1_rect) #bliting the ball
+        screen.blit(image2, image2_rect) #bliting the ball
+        screen.blit(image3, image3_rect) #bliting the ball
+        image1_btn = BallButton(image = image1, pos = (w/2 - 200, h/2)) #making the button for that ball type
+        image2_btn = BallButton(image = image2, pos = (w/2, h/2)) #making the button for that type of ball
+        image3_btn = BallButton(image = image3, pos = (w/2 + 200, h/2)) #maikng the button for tht ball type
+        back_btn = Button(image = text_bg_small, pos = (1140, 25), text_input = "MENU", font = font2, base_color = white, hovering_color = black ) #making the back button for turning back to main menu
 
-
+        if numball == 0:
+            pygame.draw.circle(screen, white, (w/2 - 200, h/2 + 60), 5)
+        elif numball == 1:
+            pygame.draw.circle(screen, white, (w/2, h/2 + 60), 5)
+        elif numball == 2:
+            pygame.draw.circle(screen, white, (w/2 + 200, h/2 + 60), 5)
 
         for btn in [image1_btn, image2_btn, image3_btn]:
-            btn.update(screen)
+            btn.update(screen) #updating every button
         
-        back_btn.change(menu_mouse_pos)
+        back_btn.change(menu_mouse_pos) #changes when hovering the button back
         
-        back_btn.update(screen)
+        back_btn.update(screen) #updates 
            
         pygame.display.update()
 
@@ -370,39 +392,85 @@ black = (0, 0, 0)
 # gray = (65, 65, 65)
 # gold = (215, 255, 0)
 
+
+#background image of buttons for text
 text_bg = pygame.image.load("images/bg.png")
 text_bg = pygame.transform.scale(text_bg, (200, 60))
+
+#function of pause ground
+def pause_ground():
+    clock = pygame.time.Clock()
+    paused = True #bool for paused or not
+    surf = pygame.Surface((500, 300)) #surface for pause ground
+    home = pygame.image.load("images/home.png").convert_alpha() #icon home
+    home_main = pygame.transform.scale(home, (50, 50)) 
+    sett = pygame.image.load("images/setting.png").convert_alpha() #icon setting
+    sett_main = pygame.transform.scale(sett, (50, 50))
+    surf_rect = surf.get_rect(center=(w/2, h/2))
+    while paused: #while paused is True
+        mouse_pos = pygame.mouse.get_pos()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:#when we click
+                if btn_close.check(mouse_pos): #checking for clicking to that button
+                    paused = False #paused becomes False
+                if btn_home.check(mouse_pos):
+                    main_ground()
+                if btn_set.check(mouse_pos):
+                    option_ground()
+
+        
+        screen.blit(surf, surf_rect) 
+        pygame.draw.rect(surf, (119, 136, 153), [0, 0, w, h])
+        
+
+        
+        btn_close = Button(image=text_bg, pos= (w/2, h/2), text_input="CONTINUE", font=font2, base_color=white, hovering_color=black) #continue button to continue the game
+        btn_home = BallButton(image = home_main, pos=(w/2 - 40, h/2 + 70)) #home button to arrive at main menu
+        btn_set = BallButton(image=sett_main, pos=(w/2 + 40, h/2 + 70)) #setting button to go to option ground
+        btn_close.change(mouse_pos)
+        btn_close.update(screen)
+        btn_home.update(screen)
+        btn_set.update(screen)
+    
+        pygame.display.update()
+        clock.tick(60)
+
+#function of mainmenu ground
 def main_ground():
+    pygame.display.set_caption("ARKANOID MENU")
     done = False
     # pygame.display.set_caption("Game start")
     while not done:
-        screen.blit(main_bg, (0, 0))
-        menu_mouse_pos = pygame.mouse.get_pos()
-        text = font1.render("MAIN MENU", True, white)
-        text_rect = text.get_rect(center = (600, 100))
-        start_btn = Button(image = text_bg, pos = (600, 250), text_input = "START", font = font2, base_color = white, hovering_color = black)
-        option_btn = Button(image = text_bg, pos = (600, 400), text_input = "OPTIONS", font = font2, base_color = white, hovering_color = black )
-        quit_btn = Button(image = text_bg, pos = (600, 550), text_input = "QUIT", font = font2, base_color = white, hovering_color = black )
-        screen.blit(text, text_rect)
+        screen.blit(main_bg, (0, 0)) #bliting the background photo
+        menu_mouse_pos = pygame.mouse.get_pos() #position of cursor
+        text = font1.render("MAIN MENU", True, white)  #text
+        text_rect = text.get_rect(center = (600, 100)) #text rect
+        start_btn = Button(image = text_bg, pos = (600, 250), text_input = "START", font = font2, base_color = white, hovering_color = black) #button of starting game
+        option_btn = Button(image = text_bg, pos = (600, 400), text_input = "OPTIONS", font = font2, base_color = white, hovering_color = black ) #button of option ground
+        quit_btn = Button(image = text_bg, pos = (600, 550), text_input = "QUIT", font = font2, base_color = white, hovering_color = black ) #exit button
+        screen.blit(text, text_rect) #bliting the text
 
         for button in [start_btn, option_btn, quit_btn]:
-            button.change(menu_mouse_pos)
-            button.update(screen)
+            button.change(menu_mouse_pos) #text color changing function
+            button.update(screen) #updates
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
                 pygame.quit()
                 exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if start_btn.check(menu_mouse_pos):
-                    playing_ground()
-                if option_btn.check(menu_mouse_pos):
-                    option_ground()
-                if quit_btn.check(menu_mouse_pos):
+                if start_btn.check(menu_mouse_pos): #if we click the start game button
+                    playing_ground() #opens the playing ground
+                if option_btn.check(menu_mouse_pos): #if we click the options button
+                    option_ground() #opens the option ground
+                if quit_btn.check(menu_mouse_pos): #if we click the exit button
                     done = True
-                    pygame.quit()
-                    exit()
+                    pygame.quit() #quits the game
+                    exit() #exits from game
         pygame.display.update()
 
 
-main_ground()
+main_ground() #activating the main ground
