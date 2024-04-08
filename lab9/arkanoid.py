@@ -5,7 +5,23 @@ w, h = 1200, 800
 screen = pygame.display.set_mode((w, h))
 bg = pygame.image.load("images/main_bg.jpg")
 main_bg = pygame.transform.scale(bg, (w, h))
-font2 = pygame.font.SysFont("OCR A Extended", 30)
+font1 = pygame.font.SysFont("OCR A Extended", 48)
+font2 = pygame.font.SysFont("OCR A Extended", 36)
+
+class BallButton():
+    def __init__(self, image, pos):
+        self.image = image
+        self.x_pos = pos[0]
+        self.y_pos = pos[1]
+        self.rect = self.image.get_rect(center=  (self.x_pos, self.y_pos))
+    def update(self, screen):
+        if self.image is not None:
+            screen.blit(self.image, self.rect)
+    
+    def check(self, position):
+        if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom):
+            return True
+        return False
 
 
 class Button():
@@ -38,8 +54,19 @@ class Button():
             self.text = self.font.render(self.text_input, True, self.base_color)
 
 
+# def chooseball(a):
+#     if a == 1:
+#         return 0
+#     elif a == 2:
+#         return 1
+#     elif a == 3:
+#         return 2
+numball = 0
+
+
+
 def playing_ground():
-    
+    global numball
 
 
     #paddle settings
@@ -134,6 +161,9 @@ def playing_ground():
     winrect.center = game_overrect.center = (w//2, h//2)
 
 
+
+    
+
     #sound effects
     collision_sound = pygame.mixer.Sound("sounds/catch.mp3") #sound when hits the block
     tapping = pygame.mixer.Sound("sounds/tap2.mp3") #sound when hits any side of screen or unbreakable block
@@ -146,6 +176,14 @@ def playing_ground():
     clock = pygame.time.Clock()
     FPS = 60
 
+    balls_types = ({'path': 'ball_football.png'},
+                    {'path': 'ball_basket.png'},
+                    {'path': 'volleyball.png'})
+    balls_lists = [pygame.image.load("balls/" + data["path"]).convert_alpha() for data in balls_types]
+    
+
+    imgg = balls_lists[numball]
+
     #boolean to stop the loop
     done = False
 
@@ -154,6 +192,7 @@ def playing_ground():
 
     #loop
     while not done:
+        menu_mouse_pos = pygame.mouse.get_pos()
         for event in pygame.event.get():
             if event.type == increase_speed:
                 ball_speed += 0.5  #adds 0.5 to speed
@@ -165,6 +204,9 @@ def playing_ground():
                 done = True
                 pygame.quit()
                 exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if back_btn.check(menu_mouse_pos):
+                    main_ground()
 
         
 
@@ -176,8 +218,16 @@ def playing_ground():
         [screen.blit(stone_block, block) for block in unbreak_block_list] #adding stone block to screen
         [screen.blit(gold_block, block) for block in bonus_list] #adding gold block to screen
         pygame.draw.rect(screen ,white, paddle) #drawing paddle
-        pygame.draw.circle(screen, white, ball.center, radius) #drawing our ball
         
+        ball_image = pygame.transform.scale(imgg, (radius*2, radius*2))
+        ball_image_rect = ball_image.get_rect(center = ball.center)
+        
+        screen.blit(ball_image, ball_image_rect)
+
+        back_btn = Button(image = text_bg, pos = (1100, 20), text_input = "MAIN MENU", font = font2, base_color = white, hovering_color = black )
+        # pygame.draw.circle(screen, white, ball.center, radius) #drawing our ball
+        back_btn.change(menu_mouse_pos)
+        back_btn.update(screen)
 
 
         #ball movement
@@ -253,6 +303,67 @@ def playing_ground():
         clock.tick(FPS) #applying fps
         pygame.display.update() #updating every time        
 
+
+def option_ground():
+    global numball
+    balls_types = ({'path': 'ball_football.png'},
+                    {'path': 'ball_basket.png'},
+                    {'path': 'volleyball.png'})
+    balls_lists = [pygame.image.load("balls/" + data["path"]).convert_alpha() for data in balls_types]
+    done = False
+    i = 20
+    
+    text = font1.render("OPTIONS", True, white)
+    text_rect = text.get_rect(center = (w/2, h/2 - 300))
+    while not done:
+        menu_mouse_pos = pygame.mouse.get_pos()
+       
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                done = True
+                pygame.quit()
+                exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if image1_btn.check(menu_mouse_pos):
+                    numball = 0
+                if image2_btn.check(menu_mouse_pos):
+                    numball = 1
+                if image3_btn.check(menu_mouse_pos):
+                    numball = 2
+                if back_btn.check(menu_mouse_pos):
+                    main_ground()
+        
+        
+        
+        screen.blit(main_bg, (0, 0))
+        screen.blit(text, text_rect)
+        image1 = pygame.transform.scale(balls_lists[0], (100, 100))
+        image2 = pygame.transform.scale(balls_lists[1], (100, 100))
+        image3 = pygame.transform.scale(balls_lists[2], (100, 100))
+        image1_rect = image1.get_rect(center= (w/2 - 200, h/2))
+        image2_rect = image2.get_rect(center= (w/2, h/2))
+        image3_rect = image3.get_rect(center= (w/2 + 200, h/2))
+        screen.blit(image1, image1_rect)
+        screen.blit(image2, image2_rect)
+        screen.blit(image3, image3_rect)
+        image1_btn = BallButton(image = image1, pos = (w/2 - 200, h/2))
+        image2_btn = BallButton(image = image2, pos = (w/2, h/2))
+        image3_btn = BallButton(image = image3, pos = (w/2 + 200, h/2))
+        back_btn = Button(image = text_bg, pos = (100, 200), text_input = "MAIN MENU", font = font2, base_color = white, hovering_color = black )
+
+
+
+        for btn in [image1_btn, image2_btn, image3_btn]:
+            btn.update(screen)
+        
+        back_btn.change(menu_mouse_pos)
+        
+        back_btn.update(screen)
+           
+        pygame.display.update()
+
+
+
 #colors
 white = (255, 255, 255)
 black = (0, 0, 0)
@@ -260,14 +371,14 @@ black = (0, 0, 0)
 # gold = (215, 255, 0)
 
 text_bg = pygame.image.load("images/bg.png")
-text_bg = pygame.transform.scale(text_bg, (150, 50))
+text_bg = pygame.transform.scale(text_bg, (200, 60))
 def main_ground():
     done = False
     # pygame.display.set_caption("Game start")
     while not done:
         screen.blit(main_bg, (0, 0))
         menu_mouse_pos = pygame.mouse.get_pos()
-        text = font2.render("MAIN MENU", True, white)
+        text = font1.render("MAIN MENU", True, white)
         text_rect = text.get_rect(center = (600, 100))
         start_btn = Button(image = text_bg, pos = (600, 250), text_input = "START", font = font2, base_color = white, hovering_color = black)
         option_btn = Button(image = text_bg, pos = (600, 400), text_input = "OPTIONS", font = font2, base_color = white, hovering_color = black )
@@ -286,7 +397,7 @@ def main_ground():
                 if start_btn.check(menu_mouse_pos):
                     playing_ground()
                 if option_btn.check(menu_mouse_pos):
-                    pass
+                    option_ground()
                 if quit_btn.check(menu_mouse_pos):
                     done = True
                     pygame.quit()

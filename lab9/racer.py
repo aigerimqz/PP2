@@ -182,6 +182,7 @@ def collideCoins():
         if p.rect.colliderect(coin.rect):
             coincollect.play()
             game_score += coin.score #adds score to total
+            print("Current score", game_score)
             coin.kill() #collided coin disappears
 
 
@@ -220,7 +221,7 @@ def losegame():
     for entity in all_sprites:
         entity.kill() #deletes all sprites
     
-    time.sleep(3)
+    time.sleep(2)
     pygame.quit()
     exit()
 
